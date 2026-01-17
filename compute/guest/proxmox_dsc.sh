@@ -1,7 +1,6 @@
 #!/bin/bash
 source /root/iac/common.lib
-LOCK_FILE="/tmp/proxmox_dsc.lock"
-LOG_FILE="/var/log/proxmox_dsc.log"
+eval $(jq -r '.proxmox_dsc | to_entries | .[] | "export " + .key + "=" + (.value | @sh)' /root/iac/variables.json)
 MANIFEST=""
 DRY_RUN=false
 declare -a MANAGED_VMIDS=()

@@ -15,5 +15,28 @@
     "SVC_HOST_UP": "proxmox-autoupdate",
     "SVC_LXC_UP": "proxmox-lxc-autoupdate",
     "SVC_ISO": "proxmox-iso-sync"
-  }
+  },
+  "//": "This section contains variables for the proxmox_dsc.sh script.",
+  "proxmox_dsc": {
+    "LOCK_FILE": "/tmp/proxmox_dsc.lock",
+    "LOG_FILE": "/var/log/proxmox_dsc.log"
+  },
+  "//": "This section contains variables for the proxmox_iso_sync.sh script.",
+  "proxmox_iso_sync": {
+    "LOG_FILE": "/var/log/proxmox_iso_sync.log",
+    "MANIFEST": "/root/iac/iso-images.json",
+    "STORAGE_ID": "local"
+  },
+  "//": "This section contains variables for the proxmox_autoupdate.sh script.",
+  "proxmox_autoupdate": {},
+  "//": "This section contains variables for the proxmox_lxc_autoupdate.sh script.",
+  "proxmox_lxc_autoupdate": {},
+  "//": "This section contains variables for the proxmox_lxc_network.sh script.",
+  "proxmox_lxc_network": {},
+  "//": "This section contains variables for the proxmox_vm_network.sh script.",
+  "proxmox_vm_network": {},
+  "//": "This section contains variables for the proxmox_lxc_storage.sh script.",
+  "proxmox_lxc_storage": {},
+  "//": "This section contains variables for the proxmox_vm_storage.sh script.",
+  "proxmox_vm_storage": {}
 }

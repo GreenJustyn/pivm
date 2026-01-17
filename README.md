@@ -33,6 +33,8 @@ Reboot Audit: Logs which containers require a reboot after patching.
 * **Foreign Workload Protection:** Scans the host for "Unmanaged" resources. If a Foreign VM/LXC is detected, **deployment is blocked** to prevent accidental overlaps, and a JSON snippet is generated for easy adoption.
 * **GitOps Workflow:** The host automatically updates itself from this git repository before every run.
 
+![PIVM GitOps Workflow for Proxmox VE](bin/img/image.png)
+
 ---
 
 ** 📅 Automation Schedule

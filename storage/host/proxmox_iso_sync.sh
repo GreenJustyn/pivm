@@ -1,8 +1,6 @@
 #!/bin/bash
 source /root/iac/common.lib
-LOG_FILE="/var/log/proxmox_iso_sync.log"
-MANIFEST="/root/iac/iso-images.json"
-STORAGE_ID="local"
+eval $(jq -r '.proxmox_iso_sync | to_entries | .[] | "export " + .key + "=" + (.value | @sh)' /root/iac/variables.json)
 
 if ! command -v jq &> /dev/null; then log "ERROR" "jq missing."; exit 1; fi
 if [ ! -f "$MANIFEST" ]; then log "ERROR" "Manifest missing."; exit 1; fi
