@@ -1,0 +1,28 @@
+[
+    {
+        "os": "Debian 13 (Trixie)",
+        "source_page": "https://cdimage.debian.org/cdimage/daily-builds/daily/arch-latest/amd64/iso-cd/",
+        "pattern": "debian-testing-amd64-netinst.iso"
+    },
+    {
+        "os": "Ubuntu 22.04 LTS",
+        "source_page": "https://releases.ubuntu.com/jammy/",
+        "pattern": "ubuntu-22.04.[0-9]+-live-server-amd64.iso"
+    },
+    {
+        "os": "Proxmox VE 8",
+        "source_page": "https://enterprise.proxmox.com/iso/",
+        "pattern": "proxmox-ve-8.[0-9]+-[0-9]+.iso"
+    },
+    {
+        "os": "Proxmox VE 9",
+        "source_page": "https://enterprise.proxmox.com/iso/",
+        "pattern": "proxmox-ve-9.[0-9]+-[0-9]+.iso"
+    },
+    {
+        "os": "Home Assistant OS",
+        "version": "16.3",
+        "source_page": "https://github.com/home-assistant/operating-system/releases/download/",
+        "pattern": "haos_ova-${version}.qcow2.xz"
+    }
+]
