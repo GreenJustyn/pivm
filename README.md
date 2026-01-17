@@ -103,9 +103,9 @@ This solution runs automatically via a Systemd Timer. The execution flow is stri
 
 ---
 
-## 📄 Configuration (`state.json`)
+## 📄 Configuration (`proxmox_dsc_state.json`)
 
-Your infrastructure is defined in `state.json`. The script supports two types of resources: `"lxc"` and `"vm"`.
+Your infrastructure is defined in `proxmox_dsc_state.json`. The script supports two types of resources: `"lxc"` and `"vm"`.
 
 ### Example Manifest
 ```json
@@ -186,7 +186,7 @@ Plaintext
 
 ```
 
-1.  Copy this JSON block into your `state.json`, commit, and push.
+1.  Copy this JSON block into your `proxmox_dsc_state.json`, commit, and push.
 
 2.  The next run will detect the update, recognize the VM, and resume management.
 
@@ -198,11 +198,11 @@ Plaintext
 This node enforces **Strict State Reconciliation** for ISO images stored in the local Proxmox storage. It ensures that only the ISOs defined in your configuration exist on the disk, saving space and ensuring version compliance.
 
 ### The Workflow
-1.  **Read Manifest:** The service reads `iso-images.json`.
+1.  **Read Manifest:** The service reads `proxmox_iso_sync.json`.
 2.  **Download:** If a file listed in the JSON is missing from the disk, it is downloaded immediately.
 3.  **Cleanup:** If a file exists on the disk but is **NOT** in the JSON, it is detected as "Obsolete" and **Deleted**.
 
-### Configuration (`iso-images.json`)
+### Configuration (`proxmox_iso_sync.json`)
 
 Manage your ISOs by editing this file. To update an OS version, simply change the `filename` and `url`. The script will download the new one and delete the old one automatically.
 
