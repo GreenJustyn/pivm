@@ -7,11 +7,8 @@
 set -euo pipefail
 
 # --- Configuration ---
-INSTALL_DIR="/root/iac"
-SVC_IAC="proxmox-iac"
-SVC_HOST_UP="proxmox-autoupdate"
-SVC_LXC_UP="proxmox-lxc-autoupdate"
-SVC_ISO="proxmox-iso-sync"
+# Source variables from JSON file
+eval $(jq -r '.uninstall | to_entries | .[] | "export " + .key + "=" + (.value | @sh)' variables.json)
 
 echo ">>> Starting Proxmox Uninstallation..."
 

@@ -1,0 +1,19 @@
+{
+  "//": "This section contains variables for the setup.sh script.",
+  "setup": {
+    "INSTALL_DIR": "/root/iac",
+    "SVC_IAC": "proxmox-iac",
+    "SVC_HOST_UP": "proxmox-autoupdate",
+    "SVC_LXC_UP": "proxmox-lxc-autoupdate",
+    "SVC_ISO": "proxmox-iso-sync",
+    "SVC_GUEST_MGR": "proxmox-guest-mgr"
+  },
+  "//": "This section contains variables for the uninstall.sh script.",
+  "uninstall": {
+    "INSTALL_DIR": "/root/iac",
+    "SVC_IAC": "proxmox-iac",
+    "SVC_HOST_UP": "proxmox-autoupdate",
+    "SVC_LXC_UP": "proxmox-lxc-autoupdate",
+    "SVC_ISO": "proxmox-iso-sync"
+  }
+}
