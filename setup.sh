@@ -31,7 +31,7 @@ rm -f /tmp/proxmox_dsc.lock
 
 # 3. Install Scripts
 echo "--- Installing Scripts ---"
-cp -v "$REPO_DIR/common.lib" "$INSTALL_DIR/"
+cp -v "$REPO_DIR/bin/common.lib" "$INSTALL_DIR/"
 cp -v "$REPO_DIR/compute/guest/proxmox_dsc.sh" "$INSTALL_DIR/"
 cp -v "$REPO_DIR/storage/host/proxmox_iso_sync.sh" "$INSTALL_DIR/"
 cp -v "$REPO_DIR/compute/host/proxmox_autoupdate.sh" "$INSTALL_DIR/"
