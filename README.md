@@ -252,7 +252,6 @@ These files are not like ISO images that can be mounted and used as installation
 To ensure available templates are up to date, the script will download the latest version of the template and delete the old one automatically, whilst decompressing the contents, creating a template after an import and registering it as a new image.
 
 ## 📂 Repository Structure
------------------------
 
 | **File** | **Description** |
 | --- | --- |
@@ -261,16 +260,20 @@ To ensure available templates are up to date, the script will download the lates
 | `variables.json` | The variables file. |
 | `LICENSE` | The license file. |
 | `README.md` | This file. |
-| `compute\host\proxmox_autoupdate.sh` | Host OS Update & Reboot script. |
-| `compute\host\proxmox_autoupdate.json` | Host OS Update & Reboot timer. |
-| `compute\guest\proxmox_dsc.sh` | The Core IaC Engine (Logic for `pct` and `qm`). |
-| `compute\guest\proxmox_dsc_state.json` | The Infrastructure Manifest. |
-| `compute\guest\proxmox_lxc_autoupdate.sh` | LXC Container Patching script. |
-| `compute\guest\proxmox_lxc_autoupdate.json` | LXC Container Patching timer. |
-| `storage\host\proxmox_iso_sync.sh` | ISO State Reconciliation script. |
-| `storage\host\proxmox_iso_sync.json` | The ISO Manifest. |
-| `network\host\proxmox_network.sh` | Network Configuration script. |
-| `network\host\proxmox_network_state.json` | The Network Manifest. |
+| `common.lib` | A common library for all the scripts. |
+| `compute/host/proxmox_autoupdate.sh` | Host OS Update & Reboot script. |
+| `compute/host/proxmox_autoupdate.json` | Host OS Update & Reboot timer. |
+| `compute/guest/proxmox_dsc.sh` | The Core IaC Engine (Logic for `pct` and `qm`). |
+| `compute/guest/proxmox_dsc_state.json` | The Infrastructure Manifest. |
+| `compute/guest/proxmox_lxc_autoupdate.sh` | LXC Container Patching script. |
+| `compute/guest/proxmox_lxc_autoupdate.json` | LXC Container Patching timer. |
+| `storage/host/proxmox_iso_sync.sh` | ISO State Reconciliation script. |
+| `storage/host/proxmox_iso_sync.json` | The ISO Manifest. |
+| `network/guest/proxmox_lxc_network.sh` | Network Configuration script for LXC. |
+| `network/guest/proxmox_lxc_network_state.json` | The Network Manifest for LXC. |
+| `storage/guest/proxmox_lxc_storage.sh` | Storage Configuration script for LXC. |
+| `storage/guest/proxmox_lxc_storage_state.json` | The Storage Manifest for LXC. |
+
 
 
 ## 📊 Logging & Troubleshooting
