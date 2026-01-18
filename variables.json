@@ -29,7 +29,8 @@
   },
   "//": "This section contains variables for the proxmox_autoupdate.sh script.",
   "proxmox_autoupdate": {
-    "LOG_FILE": "/var/log/proxmox_autoupdate.log"
+    "LOG_FILE": "/var/log/proxmox_autoupdate.log",
+    "DRY_RUN": false
   },
   "//": "This section contains variables for the proxmox_lxc_autoupdate.sh script.",
   "proxmox_lxc_autoupdate": {
