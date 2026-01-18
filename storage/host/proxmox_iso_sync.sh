@@ -1,6 +1,24 @@
 #!/bin/bash
+# -----------------------------------------------------------------------------
+# Script: proxmox_iso_sync.sh
+# Description: This script syncs ISO files to the Proxmox storage, downloading
+#              new ones and removing obsolete ones based on a manifest.
+#
+# Execution: This script is designed to be run as a systemd timer.
+#
+# Copyright: (c) 2024, Justyn Green
+# License: ISC
+#
+# -----------------------------------------------------------------------------
+
+set -euo pipefail
+
 source /root/iac/common.lib
 eval $(jq -r '.proxmox_iso_sync | to_entries | .[] | "export " + .key + "=" + (.value | @sh)' /root/iac/variables.json)
+
+# Ensure log file and directory exist
+mkdir -p "$(dirname "$LOG_FILE")"
+touch "$LOG_FILE"
 
 if ! command -v jq &> /dev/null; then log "ERROR" "jq missing."; exit 1; fi
 if [ ! -f "$MANIFEST" ]; then log "ERROR" "Manifest missing."; exit 1; fi
