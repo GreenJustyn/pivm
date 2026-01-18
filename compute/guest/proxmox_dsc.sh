@@ -186,8 +186,7 @@ detect_unmanaged_workloads() {
     log "INFO" "Starting Audit for Unmanaged Workloads..."
     local lxc_list=$(safe_exec pct list 2>/dev/null | awk 'NR>1 {print $1}')
     local vm_list=$(safe_exec qm list 2>/dev/null | awk 'NR>1 {print $1}')
-    local all_vms="$lxc_list"$'
-''"$vm_list"
+    local all_vms="${lxc_list}"$'\n'"${vm_list}"
     local found_foreign=false
     for host_vmid in $all_vms; do
         [[ -z "$host_vmid" ]] && continue
