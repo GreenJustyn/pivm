@@ -19,40 +19,39 @@ source /root/iac/common.lib
 eval $(jq -r '.proxmox_lxc_autoupdate | to_entries | .[] | "export " + .key + "=" + (.value | @sh)' /root/iac/variables.json)
 
 # --- Functions ---
-log_message() {
-    echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" >> "$LOG_FILE"
-}
+# (log function is provided by common.lib)
 
 update_lxc_container() {
     local vmid=$1
-    log_message "Starting update for LXC container $vmid."
+    log "INFO" "Starting update for LXC container $vmid."
     
-    if pct exec "$vmid" -- bash -c "apt-get update && apt-get upgrade -y"; then
-        log_message "Successfully updated LXC container $vmid."
+    if safe_exec pct exec "$vmid" -- bash -c "apt-get update && apt-get upgrade -y"; then
+        log "INFO" "Successfully updated LXC container $vmid."
     else
-        log_message "ERROR: Failed to update LXC container $vmid."
+        log "ERROR" "Failed to update LXC container $vmid."
     fi
     
-    log_message "Finished update for LXC container $vmid."
+    log "INFO" "Finished update for LXC container $vmid."
 }
 
 # --- Main Execution ---
-log_message "Starting LXC container update process..."
+log "INFO" "Starting LXC container update process..."
 
-# Ensure log directory exists
+# Ensure log file and directory exist
 mkdir -p "$(dirname "$LOG_FILE")"
+touch "$LOG_FILE"
 
 # Get all running LXC containers
-running_lxcs=$(pct list | awk 'NR>1 && $2=="running" {print $1}')
+running_lxcs=$(safe_exec pct list | awk 'NR>1 && $2=="running" {print $1}')
 
 if [ -z "$running_lxcs" ]; then
-    log_message "No running LXC containers found."
+    log "INFO" "No running LXC containers found."
 else
     for vmid in $running_lxcs; do
         update_lxc_container "$vmid"
     done
 fi
 
-log_message "LXC container update process finished."
+log "INFO" "LXC container update process finished."
 
 exit 0
