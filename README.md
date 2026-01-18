@@ -37,7 +37,7 @@ Reboot Audit: Logs which containers require a reboot after patching.
 
 ---
 
-** 📅 Automation Schedule
+📅 Automation Schedule
 The system runs on three independent Systemd timers to ensure separation of duties:
 
 | **Service** | **Schedule** | **Description** |

@@ -28,9 +28,13 @@
     "STORAGE_ID": "local"
   },
   "//": "This section contains variables for the proxmox_autoupdate.sh script.",
-  "proxmox_autoupdate": {},
+  "proxmox_autoupdate": {
+    "LOG_FILE": "/var/log/proxmox_autoupdate.log"
+  },
   "//": "This section contains variables for the proxmox_lxc_autoupdate.sh script.",
-  "proxmox_lxc_autoupdate": {},
+  "proxmox_lxc_autoupdate": {
+    "LOG_FILE": "/var/log/proxmox_lxc_autoupdate.log"
+  },
   "//": "This section contains variables for the proxmox_lxc_network.sh script.",
   "proxmox_lxc_network": {},
   "//": "This section contains variables for the proxmox_vm_network.sh script.",
