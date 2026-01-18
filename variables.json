@@ -24,7 +24,7 @@
   "//": "This section contains variables for the proxmox_iso_sync.sh script.",
   "proxmox_iso_sync": {
     "LOG_FILE": "/var/log/proxmox_iso_sync.log",
-    "MANIFEST": "/root/iac/iso-images.json",
+    "MANIFEST": "/root/iac/proxmox_iso_sync.json",
     "STORAGE_ID": "local"
   },
   "//": "This section contains variables for the proxmox_autoupdate.sh script.",
