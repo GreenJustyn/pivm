@@ -44,6 +44,7 @@ if [ -d "$INSTALL_DIR/.git" ]; then
     fi
 else
     log "Git repository not found. Cloning from $REPO_URL..."
+    cd /tmp
     rm -rf "$INSTALL_DIR"
     git clone "$REPO_URL" "$INSTALL_DIR"
     cd "$INSTALL_DIR"
