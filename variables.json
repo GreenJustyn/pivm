@@ -1,6 +1,7 @@
 {
   "//": "This section contains variables for the setup.sh script.",
   "setup": {
+    "REPO_URL": "https://github.com/GreenJustyn/pivm.git",
     "INSTALL_DIR": "/root/iac",
     "SVC_IAC": "proxmox-iac",
     "SVC_HOST_UP": "proxmox-autoupdate",

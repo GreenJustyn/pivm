@@ -1,0 +1,78 @@
+# Proxmox IaC Common Library
+MASTER_LOG="/var/log/proxmox_master.log"
+
+log() {
+    local level="$1"
+    local msg="$2"
+    local script_name=$(basename "$0")
+    local timestamp=$(date "+%Y-%m-%d %H:%M:%S")
+    local log_line="[$timestamp] [$script_name] [$level] $msg"
+    local local_line="[$timestamp] [$level] $msg"
+
+    # Check LOG_FILE once per script run
+    if [[ -z "${LOG_FILE_CHECKED:-}" ]]; then
+        export LOG_FILE_CHECKED=true
+        if [[ -n "${LOG_FILE:-}" ]]; then
+            # Ensure log file and directory exist
+            mkdir -p "$(dirname "${LOG_FILE}")"
+            touch "${LOG_FILE}"
+            if ! [ -w "${LOG_FILE}" ]; then
+                echo "[$timestamp] [$script_name] [CRITICAL] LOG_FILE (${LOG_FILE}) is not writable. Check permissions." >&2
+            fi
+        else
+            echo "[$timestamp] [$script_name] [INFO] LOG_FILE environment variable is not set for this script." >&2
+        fi
+    fi
+
+    # 1. Write to Master Log
+    echo "$log_line" >> "$MASTER_LOG"
+    
+    # 2. Write to Local Log
+    if [[ -n "${LOG_FILE:-}" ]]; then echo "$local_line" >> "$LOG_FILE"; fi
+
+    # 3. Output to Stderr (CRITICAL FIX: Prevents variable capture pollution)
+    echo "$log_line" >&2
+}
+
+# Timeout Wrapper (Max 300s)
+safe_exec() {
+    local timeout_dur="300s"
+    local cmd_str="$*"
+    log "DEBUG" "EXEC: '$cmd_str'..."
+    
+    # Run command, capturing stdout normally, but errors flow to stderr
+    timeout "$timeout_dur" "$@"
+    local status=$?
+    
+    if [ $status -eq 124 ]; then
+        log "CRITICAL" "TIMEOUT: Command killed after $timeout_dur: $cmd_str"
+        return 124
+    elif [ $status -ne 0 ]; then
+        log "WARN" "Command failed (Exit $status): $cmd_str"
+        return $status
+    fi
+    return 0
+}
+
+# Cold Apply Helper
+apply_and_restart() {
+    local vmid=$1
+    local type=$2
+    local cmd=$3
+    local args=$4
+    
+    log "ACTION" "Stopping $type $vmid to apply changes..."
+    if [ "$type" == "vm" ]; then
+        safe_exec qm shutdown "$vmid" && sleep 5
+        if qm status "$vmid" | grep -q running; then safe_exec qm stop "$vmid"; fi
+    else
+        safe_exec pct shutdown "$vmid" && sleep 5
+        if pct status "$vmid" | grep -q running; then safe_exec pct stop "$vmid"; fi
+    fi
+    
+    log "ACTION" "Applying Change: $cmd $vmid $args"
+    safe_exec $cmd "$vmid" $args
+    
+    log "ACTION" "Starting $type $vmid..."
+    if [ "$type" == "vm" ]; then safe_exec qm start "$vmid"; else safe_exec pct start "$vmid"; fi
+}

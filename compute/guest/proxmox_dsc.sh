@@ -1,27 +1,11 @@
 #!/bin/bash
-source /root/iac/common.lib
-export LOG_FILE="/var/log/proxmox_dsc.log"
-eval $(jq -r '.proxmox_dsc | to_entries | .[] | "export " + .key + "=" + (.value | @sh)' /root/iac/variables.json)
+source $INSTALL_DIR/common.lib
+eval $(jq -r '.proxmox_dsc | to_entries | .[] | "export " + .key + "=" + (.value | @sh)' $INSTALL_DIR/variables.json)
 MANIFEST=""
 DRY_RUN=false
 declare -a MANAGED_VMIDS=()
 
-while [[ "$#" -gt 0 ]]; do
-    case $1 in
-        --manifest) MANIFEST="$2"; shift ;; 
-        --dry-run) DRY_RUN=true ;; 
-    esac; shift
-done
-
-exec 200>"$LOCK_FILE"
-flock -w 300 200 || { log "WARN" "Could not acquire lock after 300s. Exiting."; exit 1; }
-
-get_resource_status() {
-    local vmid=$1
-    if safe_exec pct list 2>/dev/null | awk '{print $1}' | grep -q "^$vmid$"; then echo "exists_lxc"; return; fi
-    if safe_exec qm list 2>/dev/null | awk '{print $1}' | grep -q "^$vmid$"; then echo "exists_vm"; return; fi
-    echo "missing"
-}
+MANUALLY EDITED BY USER
 
 get_power_state() {
     local vmid=$1

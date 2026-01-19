@@ -1,6 +1,7 @@
 #!/bin/bash
 # -----------------------------------------------------------------------------
 # Script: setup.sh
+# Version: 10.9
 # Description: Installs and configures the Proxmox IaC scripts.
 # -----------------------------------------------------------------------------
 
@@ -46,6 +47,7 @@ rm -f /tmp/proxmox_dsc.lock # Ensure lock file is removed
 # 3. Install Scripts
 echo "--- Installing Scripts ---"
 cp -v "$REPO_DIR/bin/common.lib" "$INSTALL_DIR/"
+cp -v "$REPO_DIR/bin/proxmox_wrapper.sh" "$INSTALL_DIR/"
 cp -v "$REPO_DIR/compute/guest/proxmox_dsc.sh" "$INSTALL_DIR/"
 cp -v "$REPO_DIR/storage/host/proxmox_iso_sync.sh" "$INSTALL_DIR/"
 cp -v "$REPO_DIR/compute/host/proxmox_autoupdate.sh" "$INSTALL_DIR/"
@@ -65,7 +67,34 @@ cp -v "$REPO_DIR/storage/host/proxmox_iso_sync.json" "$INSTALL_DIR/"
 cp -v "$REPO_DIR/network/guest/proxmox_lxc_network_state.json" "$INSTALL_DIR/"
 cp -v "$REPO_DIR/storage/guest/proxmox_lxc_storage_state.json" "$INSTALL_DIR/"
 
-# 5. Log Rotation
+# 5. Systemd Service and Timer
+echo "--- Creating Systemd Service and Timer ---"
+cat <<EOF > /etc/systemd/system/${SVC_IAC}.service
+[Unit]
+Description=Proxmox IaC GitOps Workflow
+After=network.target
+
+[Service]
+ExecStart=$INSTALL_DIR/proxmox_wrapper.sh
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+cat <<EOF > /etc/systemd/system/${SVC_IAC}.timer
+[Unit]
+Description=Run Proxmox IaC GitOps Workflow every 5 minutes
+
+[Timer]
+OnBootSec=1min
+OnUnitActiveSec=5min
+
+[Install]
+WantedBy=timers.target
+EOF
+
+# 7. Log Rotation
 cat <<EOF > /etc/logrotate.d/proxmox_iac
 /var/log/proxmox_master.log
 /var/log/proxmox_dsc.log 
@@ -83,11 +112,8 @@ cat <<EOF > /etc/logrotate.d/proxmox_iac
 }
 EOF
 
-# 6. Systemd Timers
+# 8. Systemd Timers
 echo "--- Configuring Systemd Timers ---"
-# NOTE: This setup script expects the corresponding .service and .timer files
-# to be manually created by the user or pre-exist in a systemd path (e.g., /etc/systemd/system/).
-# This script only enables and starts them.
 systemctl daemon-reload # Reload daemon to pick up any changes to unit files
 
 systemctl enable --now ${SVC_IAC}.timer
