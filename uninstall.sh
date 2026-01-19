@@ -25,7 +25,7 @@ echo ">>> Starting Proxmox IaC Uninstallation..."
 # 1. Stop and Disable Systemd Timers and Services
 echo "--- Disabling and removing Systemd units ---"
 # Find all proxmox timers, stop them, and remove the unit files
-PROXMOX_TIMERS=$(systemctl list-unit-files --full | grep '^proxmox.*\.timer' | awk '{print $1}' || true)
+PROXMOX_TIMERS=$(systemctl list-unit-files --full | grep '^proxmox.*\.timer' -Ev 'proxmox-firewall|proxmox-boot-cleanup' | awk '{print $1}' || true)
 
 for timer in $PROXMOX_TIMERS; do
     service=${timer%.timer}.service
