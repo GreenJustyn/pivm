@@ -21,13 +21,27 @@ command -v wget >/dev/null 2>&1 || apt-get install -y wget
 
 mkdir -p "$INSTALL_DIR"
 
-# 2. Cleanup Old Processes
+# 2. Cleanup Old Processes and Systemd Units
+echo "--- Cleaning up existing Systemd units ---"
+# Stop and disable timers and services to ensure clean re-installation
+systemctl disable --now ${SVC_IAC}.timer || true
+systemctl disable --now ${SVC_IAC}.service || true
+systemctl disable --now ${SVC_HOST_UP}.timer || true
+systemctl disable --now ${SVC_HOST_UP}.service || true
+systemctl disable --now ${SVC_LXC_UP}.timer || true
+systemctl disable --now ${SVC_LXC_UP}.service || true
+systemctl disable --now ${SVC_ISO}.timer || true
+systemctl disable --now ${SVC_ISO}.service || true
+systemctl disable --now ${SVC_GUEST_MGR}.timer || true
+systemctl disable --now ${SVC_GUEST_MGR}.service || true
+
+# Kill any running script instances
 pkill -9 -f "proxmox_dsc.sh" || true
 pkill -9 -f "proxmox_lxc_mgr.sh" || true
 pkill -9 -f "proxmox_autoupdate.sh" || true
 pkill -9 -f "proxmox_lxc_autoupdate.sh" || true
 pkill -9 -f "proxmox_iso_sync.sh" || true
-rm -f /tmp/proxmox_dsc.lock
+rm -f /tmp/proxmox_dsc.lock # Ensure lock file is removed
 
 # 3. Install Scripts
 echo "--- Installing Scripts ---"
@@ -70,10 +84,16 @@ cat <<EOF > /etc/logrotate.d/proxmox_iac
 EOF
 
 # 6. Systemd Timers
-systemctl daemon-reload
+echo "--- Configuring Systemd Timers ---"
+# NOTE: This setup script expects the corresponding .service and .timer files
+# to be manually created by the user or pre-exist in a systemd path (e.g., /etc/systemd/system/).
+# This script only enables and starts them.
+systemctl daemon-reload # Reload daemon to pick up any changes to unit files
+
 systemctl enable --now ${SVC_IAC}.timer
 systemctl enable --now ${SVC_HOST_UP}.timer
 systemctl enable --now ${SVC_LXC_UP}.timer
 systemctl enable --now ${SVC_ISO}.timer
+systemctl enable --now ${SVC_GUEST_MGR}.timer
 
 echo ">>> Installation Complete."
