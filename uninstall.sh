@@ -25,7 +25,7 @@ echo ">>> Starting Proxmox IaC Uninstallation..."
 # 1. Stop and Disable Systemd Timers and Services
 echo "--- Disabling and removing Systemd units ---"
 # Find all proxmox timers, stop them, and remove the unit files
-PROXMOX_TIMERS=$(systemctl list-unit-files --full | grep '^proxmox.*\.timer' --exclude={"proxmox-firewall*","proxmox-boot-cleanup*"} | awk '{print $1}' || true)
+PROXMOX_TIMERS=$(systemctl list-unit-files --full | grep '^proxmox.*\.timer' | grep -v "proxmox-firewall" | grep -v "proxmox-boot-cleanup" | awk '{print $1}' || true)
 
 for timer in $PROXMOX_TIMERS; do
     service=${timer%.timer}.service
@@ -46,7 +46,7 @@ for timer in $PROXMOX_TIMERS; do
 done
 
 # Now, find all proxmox services, stop them, and remove the unit files
-PROXMOX_SERVICES=$(systemctl list-unit-files --full | grep '^proxmox.*\.service' --exclude={"proxmox-firewall*","proxmox-boot-cleanup*"} | awk '{print $1}' || true)
+PROXMOX_SERVICES=$(systemctl list-unit-files --full | grep '^proxmox.*\.service' | grep -v "proxmox-firewall" | grep -v "proxmox-boot-cleanup" | awk '{print $1}' || true)
 for service in $PROXMOX_SERVICES; do
     # check if service file exists
     if [ -f "/etc/systemd/system/${service}" ] || [ -f "/usr/lib/systemd/system/${service}" ]; then
