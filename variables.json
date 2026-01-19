@@ -5,16 +5,15 @@
     "INSTALL_DIR": "/root/iac",
     "SVC_IAC": "proxmox-iac",
     "SVC_HOST_UP": "proxmox-autoupdate",
-    "SVC_LXC_UP": "proxmox-lxc-autoupdate",
-    "SVC_ISO": "proxmox-iso-sync",
-    "SVC_GUEST_MGR": "proxmox-guest-mgr"
+    "SVC_GUEST_UP": "proxmox-guest-autoupdate",
+    "SVC_ISO": "proxmox-iso-sync"
   },
   "//": "This section contains variables for the uninstall.sh script.",
   "uninstall": {
     "INSTALL_DIR": "/root/iac",
     "SVC_IAC": "proxmox-iac",
     "SVC_HOST_UP": "proxmox-autoupdate",
-    "SVC_LXC_UP": "proxmox-lxc-autoupdate",
+    "SVC_GUEST_UP": "proxmox-guest-autoupdate",
     "SVC_ISO": "proxmox-iso-sync"
   },
   "//": "This section contains variables for the proxmox_dsc.sh script.",
@@ -33,9 +32,9 @@
     "LOG_FILE": "/var/log/proxmox_autoupdate.log",
     "DRY_RUN": false
   },
-  "//": "This section contains variables for the proxmox_lxc_autoupdate.sh script.",
-  "proxmox_lxc_autoupdate": {
-    "LOG_FILE": "/var/log/proxmox_lxc_autoupdate.log"
+  "//": "This section contains variables for the proxmox_guest_autoupdate.sh script.",
+  "proxmox_guest_autoupdate": {
+    "LOG_FILE": "/var/log/proxmox_guest_autoupdate.log"
   },
   "//": "This section contains variables for the proxmox_lxc_network.sh script.",
   "proxmox_lxc_network": {},
