@@ -46,7 +46,7 @@ for timer in $PROXMOX_TIMERS; do
 done
 
 # Now, find all proxmox services, stop them, and remove the unit files
-PROXMOX_SERVICES=$(systemctl list-unit-files --full | grep '^proxmox.*\.service' | awk '{print $1}' || true)
+PROXMOX_SERVICES=$(systemctl list-unit-files --full | grep '^proxmox.*\.service' --exclude={"proxmox-firewall*","proxmox-boot-cleanup*"} | awk '{print $1}' || true)
 for service in $PROXMOX_SERVICES; do
     # check if service file exists
     if [ -f "/etc/systemd/system/${service}" ] || [ -f "/usr/lib/systemd/system/${service}" ]; then
