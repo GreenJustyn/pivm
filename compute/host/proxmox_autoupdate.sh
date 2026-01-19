@@ -14,8 +14,9 @@
 set -euo pipefail
 
 # --- Source common library and variables ---
-source /root/iac/common.lib
-eval $(jq -r '.proxmox_autoupdate | to_entries | .[] | "export " + .key + "=" + (.value | @sh)' /root/iac/variables.json)
+cd "$(dirname "$0")"
+source ./common.lib
+eval $(jq -r '.proxmox_autoupdate | to_entries | .[] | "export " + .key + "=" + (.value | @sh)' ./variables.json)
 
 # --- Main Execution ---
 log "INFO" "Starting Proxmox host OS update process..."

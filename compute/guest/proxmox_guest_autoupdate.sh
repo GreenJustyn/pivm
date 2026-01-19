@@ -1,6 +1,6 @@
 #!/bin/bash
 # -----------------------------------------------------------------------------
-# Script: proxmox_lxc_autoupdate.sh
+# Script: proxmox_guest_autoupdate.sh
 # Description: This script automates the process of updating all running LXC
 #              containers on a Proxmox server. It logs the entire update
 #              process for each container.
@@ -15,8 +15,9 @@
 set -euo pipefail
 
 # --- Source common library and variables ---
-source /root/iac/common.lib
-eval $(jq -r '.proxmox_lxc_autoupdate | to_entries | .[] | "export " + .key + "=" + (.value | @sh)' /root/iac/variables.json)
+cd "$(dirname "$0")"
+source ./common.lib
+eval $(jq -r '.proxmox_guest_autoupdate | to_entries | .[] | "export " + .key + "=" + (.value | @sh)' ./variables.json)
 
 # --- Functions ---
 # (log function is provided by common.lib)

@@ -1,11 +1,10 @@
 #!/bin/bash
-source $INSTALL_DIR/common.lib
-eval $(jq -r '.proxmox_dsc | to_entries | .[] | "export " + .key + "=" + (.value | @sh)' $INSTALL_DIR/variables.json)
+cd "$(dirname "$0")"
+source ./common.lib
+eval $(jq -r '.proxmox_dsc | to_entries | .[] | "export " + .key + "=" + (.value | @sh)' ./variables.json)
 MANIFEST=""
 DRY_RUN=false
 declare -a MANAGED_VMIDS=()
-
-MANUALLY EDITED BY USER
 
 get_power_state() {
     local vmid=$1

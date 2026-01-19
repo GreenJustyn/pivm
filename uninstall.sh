@@ -24,17 +24,38 @@ echo ">>> Starting Proxmox IaC Uninstallation..."
 
 # 1. Stop and Disable Systemd Timers and Services
 echo "--- Disabling and removing Systemd units ---"
-SERVICES=("${SVC_IAC}" "${SVC_HOST_UP}" "${SVC_GUEST_UP}" "${SVC_ISO}")
-for service in "${SERVICES[@]}"; do
-    if systemctl list-units --full -all | grep -Fq "${service}.timer"; then
-        echo "Stopping and disabling ${service}.timer"
-        systemctl disable --now "${service}.timer"
-        rm -f "/etc/systemd/system/${service}.timer"
+# Find all proxmox timers, stop them, and remove the unit files
+PROXMOX_TIMERS=$(systemctl list-unit-files --full | grep '^proxmox.*\.timer' | awk '{print $1}' || true)
+
+for timer in $PROXMOX_TIMERS; do
+    service=${timer%.timer}.service
+
+    echo "Stopping and disabling ${timer}"
+    systemctl disable --now "${timer}" || true
+
+    echo "Removing unit file: ${timer}"
+    rm -f "/etc/systemd/system/${timer}"
+    # Also try to remove from /usr/lib/systemd/system
+    rm -f "/usr/lib/systemd/system/${timer}"
+
+    # Stop the associated service
+    if systemctl list-units --full -all | grep -Fq "${service}"; then
+        echo "Stopping service ${service}"
+        systemctl stop "${service}" || true
     fi
-    if systemctl list-units --full -all | grep -Fq "${service}.service"; then
-        echo "Stopping and disabling ${service}.service"
-        systemctl stop "${service}.service"
-        rm -f "/etc/systemd/system/${service}.service"
+done
+
+# Now, find all proxmox services, stop them, and remove the unit files
+PROXMOX_SERVICES=$(systemctl list-unit-files --full | grep '^proxmox.*\.service' | awk '{print $1}' || true)
+for service in $PROXMOX_SERVICES; do
+    # check if service file exists
+    if [ -f "/etc/systemd/system/${service}" ] || [ -f "/usr/lib/systemd/system/${service}" ]; then
+        echo "Stopping and disabling ${service}"
+        systemctl disable "${service}" >/dev/null 2>&1 || true # May not be enabled
+        systemctl stop "${service}" || true
+        echo "Removing unit file: ${service}"
+        rm -f "/etc/systemd/system/${service}"
+        rm -f "/usr/lib/systemd/system/${service}"
     fi
 done
 

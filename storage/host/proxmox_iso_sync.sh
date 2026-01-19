@@ -13,8 +13,9 @@
 
 set -euo pipefail
 
-source /root/iac/common.lib
-eval $(jq -r '.proxmox_iso_sync | to_entries | .[] | "export " + .key + "=" + (.value | @sh)' /root/iac/variables.json)
+cd "$(dirname "$0")"
+source ./common.lib
+eval $(jq -r '.proxmox_iso_sync | to_entries | .[] | "export " + .key + "=" + (.value | @sh)' ./variables.json)
 
 # Ensure log file and directory exist
 mkdir -p "$(dirname "$LOG_FILE")"

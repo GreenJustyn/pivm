@@ -10,8 +10,8 @@ set -euo pipefail
 
 # --- Configuration ---
 # Source variables from JSON file
-cd /root/iac
-eval $(jq -r '.setup | to_entries | .[] | "export " + .key + "=" + (.value | @sh)' variables.json)
+cd "$(dirname "$0")"
+eval $(jq -r '.setup | to_entries | .[] | "export " + .key + "=" + (.value | @sh)' ./variables.json)
 
 LOG_FILE="/var/log/proxmox_master.log"
 
